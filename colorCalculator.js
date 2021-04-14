@@ -1,6 +1,6 @@
 let cc = {
     convertHextoRGB : (hex) => {
-        let rbgMap = {0 : 'r', 1 : 'g', 2: 'b'}
+        let rbgMap = {0 : 'r', 2 : 'g', 4: 'b'}
         let rgb = {};
         for( var i = 0; i < hex.length; i+=2) {
             colorSegment = hex[i] + hex[i + 1];
@@ -9,84 +9,26 @@ let cc = {
         return rgb;
     },
 
-    convertHSVtoRBG : (hsvColor) => {
+    hsvToRgb : (h, s, v) =>{
         var r, g, b;
-        var i;
-        var f, p, q, t;
-        
-        // Make sure our arguments stay in-range
-        h = Math.max(0, Math.min(360, hsvColor[0]));
-        s = Math.max(0, Math.min(100, hsvColor[1]));
-        v = Math.max(0, Math.min(100, hsvColor[2]));
-        
-        // We accept saturation and value arguments from 0 to 100 because that's
-        // how Photoshop represents those values. Internally, however, the
-        // saturation and value are calculated from a range of 0 to 1. We make
-        // That conversion here.
-        s /= 100;
-        v /= 100;
-        
-        if(s == 0) {
-            // Achromatic (grey)
-            r = g = b = v;
-            return [
-                Math.round(r * 255), 
-                Math.round(g * 255), 
-                Math.round(b * 255)
-            ];
+      
+        var i = Math.floor(h * 6);
+        var f = h * 6 - i;
+        var p = v * (1 - s);
+        var q = v * (1 - f * s);
+        var t = v * (1 - (1 - f) * s);
+      
+        switch (i % 6) {
+          case 0: r = v, g = t, b = p; break;
+          case 1: r = q, g = v, b = p; break;
+          case 2: r = p, g = v, b = t; break;
+          case 3: r = p, g = q, b = v; break;
+          case 4: r = t, g = p, b = v; break;
+          case 5: r = v, g = p, b = q; break;
         }
-        
-        h /= 60; // sector 0 to 5
-        i = Math.floor(h);
-        f = h - i; // factorial part of h
-        p = v * (1 - s);
-        q = v * (1 - s * f);
-        t = v * (1 - s * (1 - f));
-        
-        switch(i) {
-            case 0:
-                r = v;
-                g = t;
-                b = p;
-                break;
-        
-            case 1:
-                r = q;
-                g = v;
-                b = p;
-                break;
-        
-            case 2:
-                r = p;
-                g = v;
-                b = t;
-                break;
-        
-            case 3:
-                r = p;
-                g = q;
-                b = v;
-                break;
-        
-            case 4:
-                r = t;
-                g = p;
-                b = v;
-                break;
-        
-            default: // case 5:
-                r = v;
-                g = p;
-                b = q;
-        }
-        
-        return {
-         'r' :  Math.round(r * 255), 
-         'g' :  Math.round(g * 255), 
-         'b' :  Math.round(b * 255)
-        };
-
-    },
+      
+        return { 'r': Math.round(r * 255), 'g' : Math.round(g * 255), 'b': Math.round(b * 255) };
+      },
 
     pSBC :(p,c0,c1,l) => {
         let r,g,b,P,f,t,h,i=parseInt,m=Math.round,a=typeof(c1)=="string";
@@ -137,7 +79,7 @@ let cc = {
           }
           h /= 6;
         }
-        return({ h:h, s:s, l:l });
+        return({ h:Math.round(h *360), s:Math.round(s*100), l:Math.round(l*100) });
       },
 
       hslToRgb: (h, s, l) => {
@@ -146,12 +88,12 @@ let cc = {
             r = g = b = l; // achromatic
         }else{
             function hue2rgb(p, q, t){
-            if(t < 0) t += 1;
-            if(t > 1) t -= 1;
-            if(t < 1/6) return p + (q - p) * 6 * t;
-            if(t < 1/2) return q;
-            if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
-            return p;
+                if(t < 0) t += 1;
+                if(t > 1) t -= 1;
+                if(t < 1/6) return p + (q - p) * 6 * t;
+                if(t < 1/2) return q;
+                if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+                return p;
             }
             var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
             var p = 2 * l - q;
@@ -159,11 +101,11 @@ let cc = {
             g = hue2rgb(p, q, h);
             b = hue2rgb(p, q, h - 1/3);
         }
-        return({
+        return{
             r:Math.round(r * 255),
             g:Math.round(g * 255),
             b:Math.round(b * 255),
-        });
+        };
     },
 
     shiftHue(rgb, degree) {
@@ -183,43 +125,29 @@ let cc = {
         return hslToRGB(hsl);
     },
 
-    convertRGBtoHSV : (rgb) => {
-        var computedH = 0;
-        var computedS = 0;
-        var computedV = 0;
-
-        var r = rgb.r;
-        var g = rgb.g;
-        var b = rgb.b;
-
-        if ( r==null || g==null || b==null ||
-            isNaN(r) || isNaN(g)|| isNaN(b) ) {
-            console.log('Please enter numeric RGB values!');
-            return;
+    rgbToHsv: (r, g, b) => {
+        r /= 255, g /= 255, b /= 255;
+      
+        var max = Math.max(r, g, b), min = Math.min(r, g, b);
+        var h, s, v = max;
+      
+        var d = max - min;
+        s = max == 0 ? 0 : d / max;
+      
+        if (max == min) {
+          h = 0; // achromatic
+        } else {
+          switch (max) {
+            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+            case g: h = (b - r) / d + 2; break;
+            case b: h = (r - g) / d + 4; break;
+          }
+      
+          h /= 6;
         }
-        if (r<0 || g<0 || b<0 || r>255 || g>255 || b>255) {
-            console.log('RGB values must be in the range 0 to 255.');
-            return;
-        }
-
-        r=r/255; g=g/255; b=b/255;
-        var minRGB = Math.min(r,Math.min(g,b));
-        var maxRGB = Math.max(r,Math.max(g,b));
-
-        // Black-gray-white
-        if (minRGB==maxRGB) {
-            computedV = minRGB;
-            return [0,0,computedV];
-        }
-
-        // Colors other than black-gray-white:
-        var d = (r==minRGB) ? g-b : ((b==minRGB) ? r-g : b-r);
-        var h = (r==minRGB) ? 3 : ((b==minRGB) ? 1 : 5);
-        computedH = 60*(h - d/(maxRGB - minRGB));
-        computedS = (maxRGB - minRGB)/maxRGB;
-        computedV = maxRGB;
-        return [Math.round(computedH),Math.round(computedS*100),Math.round(computedV*100)];
-    },
+      
+        return { 'h': Math.round(h * 360), 's': Math.round(s * 100), 'v':Math.round(v * 100) };
+      },
 
     mod : (x, n) => { return ((x % n) + n) % n } ,
 
@@ -308,14 +236,14 @@ let cc = {
             base = cc.convertHextoRGB(base);
         }
         let hsv = cc.convertRGBtoHSV(base);
-        let sp1_hsv = hsv.slice();
-        sp1_hsv[0] = (sp1_hsv[0] + 150) % 360;
+        let sp1_hsv = Object.assign({}, hsv)
+        sp1_hsv.h = (sp1_hsv.h + 150) % 360;
         
         let sp1_rgb = cc.convertHSVtoRBG(sp1_hsv);
         let sp1_hex = cc.convertRGBtoHex(sp1_rgb);
 
         let sp2_hsv = hsv.slice();
-        sp2_hsv[0] = (sp2_hsv[0] + 210) % 360;
+        sp2_hsv.h = (sp2_hsv.h + 210) % 360;
 
         let sp2_rgb = cc.convertHSVtoRBG(sp2_hsv);
         let sp2_hex = cc.convertRGBtoHex(sp2_rgb);
@@ -344,14 +272,14 @@ let cc = {
             base = cc.convertHextoRGB(base);
         }
         let hsv = cc.convertRGBtoHSV(base);
-        let triadic1_hsv = hsv.slice();
-        triadic1_hsv[0] = (triadic1_hsv[0] + 120) % 360;
+        let triadic1_hsv = Object.assign({}, hsv);
+        triadic1_hsv.h = (triadic1_hsv.h + 120) % 360;
 
         let triadic1_rgb = cc.convertHSVtoRBG(triadic1_hsv);
         let triadic1_hex = cc.convertRGBtoHex(triadic1_rgb);
 
         let triadic2_hsv = hsv.slice();
-        triadic2_hsv[0] = (triadic2_hsv[0] + 240) % 360;
+        triadic2_hsv.h = (triadic2_hsv.h + 240) % 360;
 
         let triadic2_rgb = cc.convertHSVtoRBG(triadic2_hsv);
         let triadic2_hex = cc.convertRGBtoHex(triadic2_rgb);
@@ -380,20 +308,20 @@ let cc = {
             base = cc.convertHextoRGB(base);
         }
         let hsv = cc.convertRGBtoHSV(base);
-        let tetradic1_hsv = hsv.slice();
-        tetradic1_hsv[0] = (tetradic1_hsv[0] + 90) % 360;
+        let tetradic1_hsv = Object.assign({}, hsv)
+        tetradic1_hsv.h = (tetradic1_hsv.h + 90) % 360;
 
         let tetradic1_rgb = cc.convertHSVtoRBG(tetradic1_hsv);
         let tetradic1_hex = cc.convertRGBtoHex(tetradic1_rgb);
 
-        let tetradic2_hsv = hsv.slice();
-        tetradic2_hsv[0] = (tetradic2_hsv[0] + 180) % 360;
+        let tetradic2_hsv = Object.assign({}, hsv)
+        tetradic2_hsv.h = (tetradic2_hsv.h + 180) % 360;
 
         let tetradic2_rgb = cc.convertHSVtoRBG(tetradic2_hsv);
         let tetradic2_hex = cc.convertRGBtoHex(tetradic2_rgb);
 
-        let tetradic3_hsv = hsv.slice();
-        tetradic3_hsv[0] = (tetradic3_hsv[0] + 270) % 360;
+        let tetradic3_hsv = Object.assign({}, hsv)
+        tetradic3_hsv.h = (tetradic3_hsv.h + 270) % 360;
 
         let tetradic3_rgb = cc.convertHSVtoRBG(tetradic3_hsv);
         let tetradic3_hex = cc.convertRGBtoHex(tetradic3_rgb);
@@ -427,14 +355,14 @@ let cc = {
             base = cc.convertHextoRGB(base);
         }
         let hsv = cc.convertRGBtoHSV(base);
-        let analagous1_hsv = hsv.slice();
-        analagous1_hsv[0] = (analagous1_hsv[0] + 30) % 360;
+        let analagous1_hsv = Object.assign({}, hsv);
+        analagous1_hsv.h = (analagous1_hsv.h + 30) % 360;
 
         let analagous1_rgb = cc.convertHSVtoRBG(analagous1_hsv);
         let analagous1_hex = cc.convertRGBtoHex(analagous1_rgb);
 
-        let analagous2_hsv = hsv.slice();
-        analagous2_hsv[0] = cc.mod((analagous2_hsv[0] - 30),360);
+        let analagous2_hsv = Object.assign({}, hsv)
+        analagous2_hsv.h = cc.mod((analagous2_hsv.h - 30),360);
 
         let analagous2_rgb = cc.convertHSVtoRBG(analagous2_hsv);
         let analagous2_hex = cc.convertRGBtoHex(analagous2_rgb);
