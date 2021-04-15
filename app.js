@@ -3,7 +3,7 @@ const app = express();
 const bodyParser = require('body-parser');
 
 const converterRoutes = require('./api/routes/convert');
-const rgbRoutes = require('./api/routes/rgb');
+const harmonyRoutes = require('./api/routes/harmony');
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
@@ -27,7 +27,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/convert', converterRoutes);
-app.use('/rgb', rgbRoutes);
+app.use('/harmony', harmonyRoutes);
 
 //error - couldn't find route
 app.use((req, res, next) => {

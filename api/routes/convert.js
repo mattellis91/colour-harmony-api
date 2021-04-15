@@ -1,6 +1,9 @@
-cc = require('../../colorCalculator');
+cc = require('../../lib/colorCalculator');
 express = require('express');
 router = express.Router();
+
+//refactor routes to use external validation methods from validation
+//refactor routes to use error responses from errors
 
 router.get('/hexToRGB',(req, res, next) => {
     if(req.query.hasOwnProperty('hex')) {
@@ -645,5 +648,6 @@ router.get('/HSLtoHSV',(req, res, next) => {
         });   
     }
 });
+
 
 module.exports = router;
