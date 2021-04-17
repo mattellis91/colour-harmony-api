@@ -1,4 +1,5 @@
-cc = require('../../lib/colorCalculator');
+
+colorConverter = require('../../lib/colorConverter');
 express = require('express');
 router = express.Router();
 
@@ -16,7 +17,7 @@ router.get('/hexToRGB',(req, res, next) => {
                 message: "hex code must be valid hex code with 6 characters"
             })
         }
-        const result = cc.convertHextoRGB(hex);
+        const result = colorConverter.convertHextoRGB(hex);
         if(typeof(result) === 'object' && result.hasOwnProperty('r')
             && result.hasOwnProperty('g') && result.hasOwnProperty('b')
         ) {
@@ -53,7 +54,7 @@ router.get('/hexToHSV',(req, res, next) => {
                 message: "hex code must be valid hex code with 6 characters"
             })
         }
-        const rgb = cc.convertHextoRGB(hex);
+        const rgb = colorConverter.convertHextoRGB(hex);
 
         //failed to do hex to rgb conversion needed for final conversion 
         if(!(typeof(rgb) === 'object' && rgb.hasOwnProperty('r')
@@ -66,7 +67,7 @@ router.get('/hexToHSV',(req, res, next) => {
             });
         }
         
-        const result = cc.rgbToHsv(rgb.r,rgb.g,rgb.b);
+        const result = colorConverter.rgbToHsv(rgb.r,rgb.g,rgb.b);
         if(typeof(result) === 'object' && result.hasOwnProperty('h')
             && result.hasOwnProperty('s') && result.hasOwnProperty('v')
         ){
@@ -104,7 +105,7 @@ router.get('/hexToHSL',(req, res, next) => {
                 message: "hex code must be valid hex code with 6 characters"
             })
         }
-        const rgb = cc.convertHextoRGB(hex);
+        const rgb = colorConverter.convertHextoRGB(hex);
 
         //failed to do hex to rgb conversion needed for final conversion 
         if(!(typeof(rgb) === 'object' && rgb.hasOwnProperty('r')
@@ -117,7 +118,7 @@ router.get('/hexToHSL',(req, res, next) => {
             });
         }
         
-        const result = cc.rgbToHsl(rgb.r,rgb.g,rgb.b);
+        const result = colorConverter.rgbToHsl(rgb.r,rgb.g,rgb.b);
         if(typeof(result) === 'object' && result.hasOwnProperty('h')
             && result.hasOwnProperty('s') && result.hasOwnProperty('l')
         ){
@@ -168,7 +169,7 @@ router.get('/RGBtoHex',(req, res, next) => {
             rgbList[componentIndex] = Number.parseInt(rgbList[componentIndex])
         }
         const rbgObj = {'r' : rgbList[0], 'g' : rgbList[1], 'b' : rgbList[2]};
-        const result = cc.convertRGBtoHex(rbgObj);
+        const result = colorConverter.convertRGBtoHex(rbgObj);
         if(result) {
             return res.send({
                 status: 1,
@@ -214,7 +215,7 @@ router.get('/RGBtoHSV',(req, res, next) => {
             rgbList[componentIndex] = Number.parseInt(rgbList[componentIndex])
         }
         const rgbObj = {'r' : rgbList[0], 'g' : rgbList[1], 'b' : rgbList[2]};
-        const result = cc.rgbToHsv(rgbObj.r, rgbObj.g, rgbObj.b);
+        const result = colorConverter.rgbToHsv(rgbObj.r, rgbObj.g, rgbObj.b);
         if(typeof(result) === 'object' && result.hasOwnProperty('h')
             && result.hasOwnProperty('s') && result.hasOwnProperty('v')
         ){
@@ -266,7 +267,7 @@ router.get('/RGBtoHSL',(req, res, next) => {
             rgbList[componentIndex] = Number.parseInt(rgbList[componentIndex])
         }
         const rgbObj = {'r' : rgbList[0], 'g' : rgbList[1], 'b' : rgbList[2]};
-        const result = cc.rgbToHsl(rgbObj.r,rgbObj.g,rgbObj.b);
+        const result = colorConverter.rgbToHsl(rgbObj.r,rgbObj.g,rgbObj.b);
         if(typeof(result) === 'object' && result.hasOwnProperty('h')
             && result.hasOwnProperty('s') && result.hasOwnProperty('l')
         ){
@@ -322,9 +323,9 @@ router.get('/HSVtoHex',(req, res, next) => {
             }
         }
         const hsvObj = {'h' : Number.parseInt(hsvList[0]), 's': Number.parseInt(hsvList[1]), 'v': Number.parseInt(hsvList[2])};
-        const rgbObj = cc.hsvToRgb(hsvObj.h / 360,hsvObj.s / 100,hsvObj.v / 100);
+        const rgbObj = colorConverter.hsvToRgb(hsvObj.h / 360,hsvObj.s / 100,hsvObj.v / 100);
         console.log(rgbObj)
-        const result = cc.convertRGBtoHex(rgbObj);
+        const result = colorConverter.convertRGBtoHex(rgbObj);
         if(result) {
             return res.send({
                 status: 1,
@@ -377,7 +378,7 @@ router.get('/HSVtoRGB',(req, res, next) => {
             }
         }
         const hsvObj = {'h' : Number.parseInt(hsvList[0]), 's': Number.parseInt(hsvList[1]), 'v': Number.parseInt(hsvList[2])};
-        const result = cc.hsvToRgb(hsvObj.h / 360,hsvObj.s / 100,hsvObj.v / 100);
+        const result = colorConverter.hsvToRgb(hsvObj.h / 360,hsvObj.s / 100,hsvObj.v / 100);
         if(typeof(result) === 'object' && result.hasOwnProperty('r')
             && result.hasOwnProperty('g') && result.hasOwnProperty('b')
         ) {
@@ -432,7 +433,7 @@ router.get('/HSVtoHSL',(req, res, next) => {
             }
         }
         const hsvObj = {'h' : Number.parseInt(hsvList[0]), 's': Number.parseInt(hsvList[1]), 'v': Number.parseInt(hsvList[2])};
-        const rgbObj = cc.hsvToRgb(hsvObj.h / 360,hsvObj.s / 100,hsvObj.v / 100);
+        const rgbObj = colorConverter.hsvToRgb(hsvObj.h / 360,hsvObj.s / 100,hsvObj.v / 100);
         if(!(typeof(rgbObj) === 'object' && rgbObj.hasOwnProperty('r')
             && rgbObj.hasOwnProperty('g') && rgbObj.hasOwnProperty('b')
             )) {
@@ -442,7 +443,7 @@ router.get('/HSVtoHSL',(req, res, next) => {
                     message: "Error converting HSV to HSL"
                 });
         }
-        const result = cc.rgbToHsl(rgbObj.r,rgbObj.g,rgbObj.b);
+        const result = colorConverter.rgbToHsl(rgbObj.r,rgbObj.g,rgbObj.b);
         if(typeof(result) === 'object' && result.hasOwnProperty('h')
             && result.hasOwnProperty('s') && result.hasOwnProperty('l')
         ){
@@ -498,7 +499,7 @@ router.get('/HSLtoHex',(req, res, next) => {
             }
         }
         const hslObj = {'h' : hslList[0], 's': hslList[1], 'l': hslList[2]};
-        const rgbObj = cc.hslToRgb(Math.round(Number.parseInt(hslObj.h) / 360), Math.round(Number.parseInt(hslObj.s) / 100), Math.round(Number.parseInt(hslObj.l) / 100));
+        const rgbObj = colorConverter.hslToRgb(Math.round(Number.parseInt(hslObj.h) / 360), Math.round(Number.parseInt(hslObj.s) / 100), Math.round(Number.parseInt(hslObj.l) / 100));
         if(!(typeof(rgbObj) === 'object' && rgbObj.hasOwnProperty('r')
         && rgbObj.hasOwnProperty('g') && rgbObj.hasOwnProperty('b'))){
             return res.send({
@@ -507,7 +508,7 @@ router.get('/HSLtoHex',(req, res, next) => {
                 message: "Error converting HSL to hex"
             });
         }
-        const result = cc.convertRGBtoHex(rgbObj);
+        const result = colorConverter.convertRGBtoHex(rgbObj);
         if(result) {
             return res.send({
                 status: 1,
@@ -560,7 +561,7 @@ router.get('/HSLtoRGB',(req, res, next) => {
             }
         }
         const hslObj = {'h' : hslList[0], 's': hslList[1], 'l': hslList[2]};
-        const result = cc.hslToRgb(Number.parseInt(hslObj.h) / 360, Number.parseInt(hslObj.s) / 100, Number.parseInt(hslObj.l) / 100);
+        const result = colorConverter.hslToRgb(Number.parseInt(hslObj.h) / 360, Number.parseInt(hslObj.s) / 100, Number.parseInt(hslObj.l) / 100);
         if(typeof(result) === 'object' && result.hasOwnProperty('r')
         && result.hasOwnProperty('g') && result.hasOwnProperty('b')){
             return res.send({
@@ -614,7 +615,7 @@ router.get('/HSLtoHSV',(req, res, next) => {
             }
         }
         const hslObj = {'h' : hslList[0], 's': hslList[1], 'l': hslList[2]};
-        const rgbObj = cc.hslToRgb(Number.parseInt(hslObj.h) / 360, Number.parseInt(hslObj.s) / 100, Number.parseInt(hslObj.l) / 100);
+        const rgbObj = colorConverter.hslToRgb(Number.parseInt(hslObj.h) / 360, Number.parseInt(hslObj.s) / 100, Number.parseInt(hslObj.l) / 100);
         if(!(typeof(rgbObj) === 'object' && rgbObj.hasOwnProperty('r')
         && rgbObj.hasOwnProperty('g') && rgbObj.hasOwnProperty('b'))){
             return res.send({
@@ -623,7 +624,7 @@ router.get('/HSLtoHSV',(req, res, next) => {
                 message: "Error converting HSL to HSV"
             });
         }
-        const result = cc.rgbToHsv(rgbObj.r,rgbObj.g,rgbObj.b);
+        const result = colorConverter.rgbToHsv(rgbObj.r,rgbObj.g,rgbObj.b);
         if(typeof(result) === 'object' && result.hasOwnProperty('h')
             && result.hasOwnProperty('s') && result.hasOwnProperty('v')
         ){
