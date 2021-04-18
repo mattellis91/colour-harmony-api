@@ -21,6 +21,11 @@ router.get('/tetradic',(req, res, next) => {
     getColorHarmonyResponse(req,res,colorCalculator.calculateTetradic);
 });
 
+router.get('/analagous',(req, res, next) => {
+    getColorHarmonyResponse(req,res,colorCalculator.calculateAnalagous);
+});
+
+
 const getColorHarmonyResponse = (req,res,harmonyMethod) => {
     const params = req.query;
     const color = util.getColorValue(params);
