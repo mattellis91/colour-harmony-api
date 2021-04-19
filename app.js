@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 
 const converterRoutes = require('./api/routes/convert');
 const harmonyRoutes = require('./api/routes/harmony');
+const randomRoute = require('./api/routes/random');
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
@@ -26,8 +27,9 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use('/convert', converterRoutes);
-app.use('/harmony', harmonyRoutes);
+app.use('/api/convert', converterRoutes);
+app.use('/api/harmony', harmonyRoutes);
+app.use('/api/random', randomRoute);
 
 //error - couldn't find route
 app.use((req, res, next) => {
