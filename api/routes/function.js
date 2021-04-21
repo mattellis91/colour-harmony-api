@@ -5,11 +5,30 @@ const validator = require('../../lib/validator');
 const response = require('../../lib/response');
 express = require('express');router = express.Router();
 
-router.get('/',(req, res, next) => {
+router.get('/darken',(req, res, next) => {
     getDarkenResponse(req,res,undefined);
 });
 
-const getDarkenResponse = (req,res,method) => {
+router.get('/random',(req, res, next) => {
+    const hex = colorCalculator.getRandomHex();
+    const rgb = colorConverter.convertHextoRGB(hex);
+    const hsv = colorConverter.rgbToHsv(rgb.r, rgb.g, rgb.b);
+    const hsl = colorConverter.rgbToHsl(rgb.r, rgb.g, rgb.b);
+    return res.send(response.buildSuccessResponse(req, {
+        hex: hex,
+        rgb: rgb,
+        hsv: hsv,
+        hsl: hsl
+    }));
+});
+
+//TODO: add lighten route
+//TODO: add shift route
+//TODO: add invert route
+//TODO: add blend route
+
+
+const getDarkenLightenResponse = (req,res,method) => {
     const params = req.query;
     const color = util.getColorValue(params);
     const percentage = util.getPercentage(params);
