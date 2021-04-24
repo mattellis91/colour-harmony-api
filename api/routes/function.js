@@ -117,7 +117,6 @@ router.get('/shift',(req,res,next) => {
 
 router.get('/random',(req, res, next) => {
 
-    //TODO: add option to 
     const hex = colorCalculator.getRandomHex();
     const rgb = colorConverter.convertHextoRGB(hex);
     const hsv = colorConverter.rgbToHsv(rgb.r, rgb.g, rgb.b);
@@ -130,7 +129,68 @@ router.get('/random',(req, res, next) => {
     }));
 });
 
-//TODO: add blend route
+router.get('/blend', (req,res,next) => {
+    const params = req.query;
+    const colors = util.getStartEndColorValues(params);
+    const mode = util.getMode(params);
+    const percentage = util.getPercentage(params);
+    const functionColors = [];
+    let rgb;
+    if(colors.length === 2) {
+        for(let i = 0; i < 2; i ++) {
+            switch(colors[i].type) {
+                case 'hex':
+                    validCheck = validator.isValidHex(colors[i].value);
+                    if(!validCheck.success) {
+                        return res.send(response.buildErrorResponse(req,2,validCheck.error));
+                    }
+                    rgb = colorConverter.convertHextoRGB(colors[i].value);
+                    functionColors.push({
+                        sourceRGB :"rgb("+rgb.r+","+rgb.g+","+rgb.b+")",
+                        sourceOriginal: colors[i].value
+                    });
+                    break;
+                case 'hsl':
+                    validCheck = validator.isValidHsl(colors[i].value);
+                    if(!validCheck.success) {
+                        return res.send(response.buildErrorResponse(req,2,validCheck.error));
+                    }
+                    const hslObj = {'h' : colors[i].value[0], 's': colors[i].value[1], 'l': colors[i].value[2]};
+                    rgb = colorConverter.hslToRgb(Number.parseInt(hslObj.h) / 360, Number.parseInt(hslObj.s) / 100, Number.parseInt(hslObj.l) / 100);
+                    functionColors.push({
+                        sourceRGB: "rgb("+rgb.r+","+rgb.g+","+rgb.b+")",
+                        sourceOriginal: hslObj
+                    });
+                    break;
+                case 'hsv':
+                    validCheck = validator.isValidHsv(colors[i].value);
+                    if(!validCheck.success) {
+                        return res.send(response.buildErrorResponse(req,2,validCheck.error));
+                    }
+                    const hsvObj = {'h' : colors[i].value[0], 's': colors[i].value[1], 'v': colors[i].value[2]};
+                    rgb = colorConverter.hsvToRgb(hsvObj.h / 360,hsvObj.s / 100,hsvObj.v / 100);        
+                    functionColors.push({
+                        sourceRGB: "rgb("+rgb.r+","+rgb.g+","+rgb.b+")",
+                        sourceOriginal: hsvObj
+                    });
+                case 'rgb':
+                    validCheck = validator.isValidRgb(colors[i].value);
+                    if(!validCheck.success) {
+                        return res.send(response.buildErrorResponse(req,2,validCheck.error));
+                    }
+                    functionColors.push({
+                        sourceRGB: "rgb("+colors[i].value[0]+","+colors[i].value[1]+","+colors[i].value[2]+")",
+                        sourceOriginal: {r:colors[i].value[0], g:colors[i].value[1], b:colors[i].value[2]}
+                    });
+            }
+        }
+        const result = colorCalculator.blend(functionColors[0].sourceRGB, functionColors[1].sourceRGB,
+            functionColors[0].sourceOriginal, functionColors[1].sourceOriginal, Number.parseInt(percentage) / 100, mode);
+        return res.send(response.buildSuccessResponse(req,result));
+    } else {
+        return res.send(response.buildErrorResponse(req,2,response.NO_START_END_COLOR_PROVIDED));
+    }
+});
 
 const getDarkenOrLightenResponse = (req,res,type) => {
     const params = req.query;

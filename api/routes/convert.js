@@ -3,8 +3,9 @@ colorConverter = require('../../lib/colorConverter');
 express = require('express');
 router = express.Router();
 
-//refactor routes to use external validation methods from validation
-//refactor routes to use error responses from errors
+//TODO:refactor routes to use external validation methods from validation
+//TODO:refactor routes to use error responses from errors
+//TODO:add to all route for each source (returns the all the conversions from the given source)
 
 router.get('/hexToRGB',(req, res, next) => {
     if(req.query.hasOwnProperty('hex')) {

@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const converterRoutes = require('./api/routes/convert');
 const harmonyRoutes = require('./api/routes/harmony');
 const functionRoute = require('./api/routes/function');
+const palletRoutes = require('./api/routes/pallet');
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
@@ -29,6 +30,7 @@ app.use((req, res, next) => {
 app.use('/api/convert', converterRoutes);
 app.use('/api/harmony', harmonyRoutes);
 app.use('/api/function', functionRoute);
+app.use('/api/pallet', palletRoutes);
 
 //error - couldn't find route
 app.use((req, res, next) => {
