@@ -7,9 +7,9 @@ Rest API for color calculations
 Color conversion endpoints
 
 #### Hex to other formats
-`GET /api/convert/hexToRGB?hex=<hexcode>`
-`GET /api/convert/hexToHSV?hex=<hexcode>`
-`GET /api/convert/hexToHSL?hex=<hexcode>`
+`GET /api/convert/hexToRGB?hex=<hexcode>`<br>
+`GET /api/convert/hexToHSV?hex=<hexcode>`<br>
+`GET /api/convert/hexToHSL?hex=<hexcode>`<br>
 `GET /api/convert/hexToAll?hex=<hexcode>`
 
 #### Required parameters
@@ -33,9 +33,9 @@ Color conversion endpoints
 ```
 
 #### RGB to other formats
-`GET /api/convert/RGBToHex?rgb=<rgb>`
-`GET /api/convert/RGBToHSV?rgb=<rgb>`
-`GET /api/convert/RGBToHSL?rgb=<rgb>`
+`GET /api/convert/RGBToHex?rgb=<rgb>`<br>
+`GET /api/convert/RGBToHSV?rgb=<rgb>`<br>
+`GET /api/convert/RGBToHSL?rgb=<rgb>`<br>
 `GET /api/convert/RGBToAll?rgb=<rgb>`
 
 #### Required parameters
@@ -55,9 +55,9 @@ Color conversion endpoints
 ```
 
 #### HSV to other formats
-`GET /api/convert/HSVToHex?hsv=<hsv>`
-`GET /api/convert/HSVToRGB?hsv=<hsv>`
-`GET /api/convert/HSVToHSL?hsv=<hsv>`
+`GET /api/convert/HSVToHex?hsv=<hsv>`<br>
+`GET /api/convert/HSVToRGB?hsv=<hsv>`<br>
+`GET /api/convert/HSVToHSL?hsv=<hsv>`<br>
 `GET /api/convert/HSVToAll?hsv=<hsv>`
 
 #### Required parameters
@@ -81,9 +81,9 @@ Color conversion endpoints
 ```
 
 #### HSL to other formats
-`GET /api/convert/HSLToHex?hsl=<hsl>`
-`GET /api/convert/HSLToRGB?hsl=<hsl>`
-`GET /api/convert/HSLToHSV?hsl=<hsl>`
+`GET /api/convert/HSLToHex?hsl=<hsl>`<br>
+`GET /api/convert/HSLToRGB?hsl=<hsl>`<br>
+`GET /api/convert/HSLToHSV?hsl=<hsl>`<br>
 `GET /api/convert/HSLToAll?hsl=<hsl>`
 
 #### Required parameters
