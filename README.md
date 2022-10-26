@@ -105,3 +105,53 @@ Color conversion endpoints
     }
 }
 ```
+
+## Harmonies
+
+Color harmony endpoints
+
+#### Available Harmonies 
+`GET /api/harmony/complementary?param=<value>`
+`GET /api/harmony/splitComplementary?param=<value>`
+`GET /api/harmony/triadic?param=<value>`
+`GET /api/harmony/tetradic?param=<value>`
+`GET /api/harmony/analagous?param=<value>`
+
+Where param = either hex, rgb, hsv or hsl
+Where value = corresponding value format based on param
+
+#### Required parameters
+
+| Key      | Description   |
+| ------------- |-------------  |
+| hex **OR** rgb **OR** hsv **OR** hsl  | corresponding value format based on key  |
+
+#### Example response
+`http://localhost:3000/api/harmony/complementary?hex=0000ff`
+```
+{
+    "status": 1,
+    "path": "/api/harmony/complementary",
+    "data": {
+        "harmony": "complementary",
+        "description": "returns the color with the hue 180 degrees from the original color",
+        "source": "0000ff",
+        "complementaryRGB": {
+            "r": 255,
+            "g": 255,
+            "b": 0
+        },
+        "complementaryHex": "ffff0",
+        "complementaryHSV": {
+            "h": 60,
+            "s": 100,
+            "v": 100
+        },
+        "complementaryHSL": {
+            "h": 60,
+            "s": 100,
+            "l": 50
+        }
+    }
+}
+```
