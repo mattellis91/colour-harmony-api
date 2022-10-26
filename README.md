@@ -111,10 +111,10 @@ Color conversion endpoints
 Color harmony endpoints
 
 #### Available Harmonies 
-`GET /api/harmony/complementary?param=<value>`<br>
-`GET /api/harmony/splitComplementary?param=<value>`<br>
-`GET /api/harmony/triadic?param=<value>`<br>
-`GET /api/harmony/tetradic?param=<value>`<br>
+`GET /api/harmony/complementary?param=<value>`
+`GET /api/harmony/splitComplementary?param=<value>`
+`GET /api/harmony/triadic?param=<value>`
+`GET /api/harmony/tetradic?param=<value>`
 `GET /api/harmony/analagous?param=<value>`
 
 Where param = either hex, rgb, hsv or hsl
@@ -155,3 +155,98 @@ Where value = corresponding value format based on param
     }
 }
 ```
+
+## Color functions
+
+Color function endpoints
+
+#### Darken / Lighten
+
+`GET /api/function/darken?param=<value>`<br>
+`GET /api/function/lighten?param=<value>`
+
+Where param = either hex, rgb, hsv or hsl
+Where value = corresponding value format based on param
+
+#### Required parameters
+| Key      | Description   |
+| ------------- |-------------  |
+| hex **OR** rgb **OR** hsv **OR** hsl  | corresponding value format based on key  |
+
+#### Optional parameters
+| Key      | Description   |
+| ------------- |-------------  |
+| hex **OR** rgb **OR** hsv **OR** hsl  | corresponding value format based on key  |
+| mode  | either 'linear' or 'log' (default of 'log') |
+
+#### Example response
+`http://localhost:3000/api/function/darken?hex=0000ff&percentage=50`
+```
+{
+    "status": 1,
+    "path": "/api/function/darken",
+    "data": {
+        "function": "darken",
+        "mode": "log",
+        "description": "the color value that is the given amount of percentage darker than the source color",
+        "source": "0000ff",
+        "result": {
+            "rgb": {
+                "r": 0,
+                "g": 0,
+                "b": 180
+            },
+            "hex": "00b4",
+            "hsv": {
+                "h": 240,
+                "s": 100,
+                "v": 70.59
+            },
+            "hsl": {
+                "h": 240,
+                "s": 100,
+                "l": 35.29
+            }
+        }
+    }
+}
+```
+
+
+#### Random
+Returns a random color in all formats
+`GET /api/function/random`
+
+#### Required parameters
+No Parameters required
+
+#### Example response
+`http://localhost:3000/api/function/random`
+```
+{
+    "status": 1,
+    "path": "/api/function/random",
+    "data": {
+        "hex": "19806B",
+        "rgb": {
+            "r": 25,
+            "g": 128,
+            "b": 107
+        },
+        "hsv": {
+            "h": 167.77,
+            "s": 80.47,
+            "v": 50.2
+        },
+        "hsl": {
+            "h": 167.77,
+            "s": 67.32,
+            "l": 30
+        }
+    }
+}
+```
+
+
+
+
