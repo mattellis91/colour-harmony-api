@@ -111,10 +111,10 @@ Color conversion endpoints
 Color harmony endpoints
 
 #### Available Harmonies 
-`GET /api/harmony/complementary?param=<value>`
-`GET /api/harmony/splitComplementary?param=<value>`
-`GET /api/harmony/triadic?param=<value>`
-`GET /api/harmony/tetradic?param=<value>`
+`GET /api/harmony/complementary?param=<value>`<br>
+`GET /api/harmony/splitComplementary?param=<value>`<br>
+`GET /api/harmony/triadic?param=<value>`<br>
+`GET /api/harmony/tetradic?param=<value>`<br>
 `GET /api/harmony/analagous?param=<value>`
 
 Where param = either hex, rgb, hsv or hsl
